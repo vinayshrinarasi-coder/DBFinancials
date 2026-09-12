@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="info.androidhive.recyclerviewsearch.MainActivity">
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:orderInCategory="0"
+        android:title="Search"
+        app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
+
+    <item
+        android:id="@+id/filter"
+        android:orderInCategory="1"
+        android:title="Filter"
+        app:showAsAction="always"
+        android:color="@android:color/white"
+        app:actionViewClass="android.widget.Spinner"/>
+
+    <item
+        android:id="@+id/sort"
+        android:orderInCategory="3"
+        android:title="DSC"
+        android:icon="@drawable/ic_filter"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/add"
+        android:orderInCategory="3"
+        android:title="DSC"
+        android:icon="@drawable/ic_add"
+        app:showAsAction="always"/>
+
+
+</menu>
