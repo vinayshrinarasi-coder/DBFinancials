@@ -24,6 +24,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import androidx.core.view.WindowCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -44,6 +46,7 @@ public class Display extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_display);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -55,16 +58,26 @@ public class Display extends AppCompatActivity {
             return insets;
         });
 
-        ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.appBarLayout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(v.getPaddingLeft(), systemBars.top, v.getPaddingRight(), v.getPaddingBottom());
+            v.setPadding(0, systemBars.top, 0, 0);
             return insets;
         });
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         init();
+
+        findViewById(R.id.fab_add).setOnClickListener(view -> 
+                UiUtils.animateClick(view, () -> 
+                        startActivity(new Intent(Display.this, AddNewPolicy.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))));
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     private void init() {
@@ -76,50 +89,55 @@ public class Display extends AppCompatActivity {
         bondList.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         bondList.setLayoutManager(mLayoutManager);
-        bondList.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         bondList.setItemAnimator(new DefaultItemAnimator());
         bondList.setAdapter(mAdapter);
         bondList.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), bondList, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Policy poly = mAdapter.getList().get(position);
-                Toast.makeText(getApplicationContext(), poly.getCertificateNumber() + " is selected!", Toast.LENGTH_SHORT).show();
+                final Policy poly = mAdapter.getList().get(position);
+                showOptionsDialog(poly);
             }
 
             @Override
             public void onLongClick(View view, final int position) {
                 final Policy poly = mAdapter.getList().get(position);
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Display.this);
-                alertDialogBuilder.setMessage("Select an option..");
-                alertDialogBuilder.setPositiveButton("Delete",
-                        (arg0, arg1) -> {
-                            arg0.dismiss();
-                            DatabaseHandler db = new DatabaseHandler(Display.this);
-                            db.deletePolicy(poly);
-                            runSQL();
-                        });
-
-                alertDialogBuilder.setNegativeButton("Edit",
-                        (dialog, which) -> {
-                            dialog.dismiss();
-                            Intent in = new Intent(getApplicationContext(), EditPolicy.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            in.putExtra("poly", new Gson().toJson(poly));
-                            startActivity(in);
-                            finish();
-                        });
-
-                alertDialogBuilder.setNeutralButton("View",
-                        (dialog, which) -> {
-                            dialog.dismiss();
-                            Intent in = new Intent(getApplicationContext(), ViewPolicy.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            in.putExtra("poly", new Gson().toJson(poly));
-                            startActivity(in);
-                        });
-
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                showOptionsDialog(poly);
             }
         }));
+    }
+
+    private void showOptionsDialog(Policy poly) {
+        String[] options = {"View Details", "Edit Policy", "Delete Policy"};
+        new MaterialAlertDialogBuilder(Display.this)
+                .setTitle("Policy: " + poly.getCertificateNumber())
+                .setItems(options, (dialog, which) -> {
+                    if (which == 0) {
+                        Intent in = new Intent(getApplicationContext(), ViewPolicy.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        in.putExtra("poly", new Gson().toJson(poly));
+                        startActivity(in);
+                    } else if (which == 1) {
+                        Intent in = new Intent(getApplicationContext(), EditPolicy.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        in.putExtra("poly", new Gson().toJson(poly));
+                        startActivity(in);
+                        finish();
+                    } else if (which == 2) {
+                        confirmDelete(poly);
+                    }
+                })
+                .show();
+    }
+
+    private void confirmDelete(Policy poly) {
+        new MaterialAlertDialogBuilder(Display.this)
+                .setTitle("Delete Policy")
+                .setMessage("Are you sure you want to delete this policy?")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    DatabaseHandler db = new DatabaseHandler(Display.this);
+                    db.deletePolicy(poly);
+                    runSQL();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void runSQL() {

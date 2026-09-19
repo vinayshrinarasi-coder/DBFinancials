@@ -32,20 +32,36 @@ public class AddNewPolicy extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_add_new_policy);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.appBarLayout), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(0, systemBars.top, 0, 0);
             return insets;
         });
 
         save = findViewById(R.id.save);
         progressBar = findViewById(R.id.progressBar);
         add();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     public void add() {
@@ -137,7 +153,7 @@ public class AddNewPolicy extends AppCompatActivity {
         maturityAmount.addTextChangedListener(watcher);
         depositAmount.addTextChangedListener(watcher);
 
-        save.setOnClickListener(view -> {
+        save.setOnClickListener(view -> UiUtils.animateClick(view, () -> {
             if (save.getText().toString().trim().equalsIgnoreCase("Save Policy")) {
                 final String holderStr = holder.getText().toString().trim();
                 final String certificateNumberStr = certificateNumber.getText().toString().trim();
@@ -166,6 +182,7 @@ public class AddNewPolicy extends AppCompatActivity {
                 else if (validateNumber(depositAmountStr, "Please enter valid deposit amount..!!") &&
                         validateNumber(maturityAmountStr, "Please enter valid maturity amount..!!") &&
                         validateDouble(rateOfInterestStr, "Please enter valid rate of interest..!!")) {
+                    save.setEnabled(false);
                     save.setText("Please Wait..");
                     if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
                     MediaPlayer playr = MediaPlayer.create(AddNewPolicy.this, R.raw.coin);
@@ -190,7 +207,7 @@ public class AddNewPolicy extends AppCompatActivity {
                     }
                 }
             }
-        });
+        }));
     }
 
     private void updateInterest() {

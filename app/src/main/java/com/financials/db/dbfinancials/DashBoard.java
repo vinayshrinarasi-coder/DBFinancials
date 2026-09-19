@@ -80,11 +80,18 @@ public class DashBoard extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_dash_board);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.coordinator_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.appBarLayout), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(0, systemBars.top, 0, 0);
             return insets;
         });
 
@@ -123,7 +130,15 @@ public class DashBoard extends AppCompatActivity
         progressBar = findViewById(R.id.progressBar);
 
         display = findViewById(R.id.display);
-        display.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), Display.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)));
+        display.setOnClickListener(view -> UiUtils.animateClick(view, () -> 
+                startActivity(new Intent(getApplicationContext(), Display.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))));
+        
+        // Hide maturity rows initially
+        findViewById(R.id.row1).setVisibility(View.GONE);
+        findViewById(R.id.row2).setVisibility(View.GONE);
+        findViewById(R.id.row3).setVisibility(View.GONE);
+        findViewById(R.id.row4).setVisibility(View.GONE);
+        
         runSQL();
     }
 
@@ -144,11 +159,13 @@ public class DashBoard extends AppCompatActivity
             cashAtBank += p.getDepositAmount();
             intrst += p.getInterest();
             if (i < 4) {
+                int rowId = getResources().getIdentifier("row" + (i + 1), "id", getPackageName());
                 int dateId = getResources().getIdentifier("date" + (i + 1), "id", getPackageName());
                 int holderId = getResources().getIdentifier("h" + (i + 1), "id", getPackageName());
                 int intId = getResources().getIdentifier("int" + (i + 1), "id", getPackageName());
                 int totalId = getResources().getIdentifier("total" + (i + 1), "id", getPackageName());
 
+                if (rowId != 0) findViewById(rowId).setVisibility(View.VISIBLE);
                 if (dateId != 0) ((TextView) findViewById(dateId)).setText(p.getReadableDateOfMaturity());
                 if (holderId != 0) ((TextView) findViewById(holderId)).setText(p.getHolder());
                 

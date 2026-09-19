@@ -23,6 +23,7 @@ public class LogIn extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_log_in);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -34,9 +35,9 @@ public class LogIn extends AppCompatActivity {
             return insets;
         });
 
-        ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.appBarLayout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(v.getPaddingLeft(), systemBars.top, v.getPaddingRight(), v.getPaddingBottom());
+            v.setPadding(0, systemBars.top, 0, 0);
             return insets;
         });
 
@@ -49,7 +50,7 @@ public class LogIn extends AppCompatActivity {
         unameEditText = findViewById(R.id.unameEditText);
         passEditText = findViewById(R.id.passEditText);
         login = findViewById(R.id.btnLogin);
-        login.setOnClickListener(view -> {
+        login.setOnClickListener(view -> UiUtils.animateClick(view, () -> {
             passInputLayout.setError(null);
             unameInputLayout.setError(null);
             if (unameEditText.getText() == null || !unameEditText.getText().toString().trim().equalsIgnoreCase("bhat@1950")) {
@@ -59,6 +60,6 @@ public class LogIn extends AppCompatActivity {
             } else {
                 startActivity(new Intent(getApplicationContext(), DashBoard.class));
             }
-        });
+        }));
     }
 }

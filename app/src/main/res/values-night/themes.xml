@@ -1,26 +1,30 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.DBFinancials" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.DBFinancials" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimary">@color/primaryContainer</item>
+        <item name="colorOnPrimary">@color/onPrimaryContainer</item>
+        <item name="colorPrimaryContainer">@color/primary</item>
+        <item name="colorOnPrimaryContainer">@color/onPrimary</item>
+
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/secondaryContainer</item>
+        <item name="colorOnSecondary">@color/onSecondaryContainer</item>
+
+        <!-- Tertiary brand color. -->
+        <item name="colorTertiary">@color/tertiaryContainer</item>
+        <item name="colorOnTertiary">@color/onTertiaryContainer</item>
+
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Surface and Background -->
+        <item name="android:colorBackground">@color/onBackground</item>
+        <item name="colorSurface">@color/onSurfaceVariant</item>
+        <item name="colorOnSurface">@color/background</item>
     </style>
 
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <item name="android:statusBarColor">?attr/colorPrimary</item>
-    </style>
+    <style name="AppTheme" parent="Theme.DBFinancials" />
+    <style name="AppTheme.NoActionBar" parent="Theme.DBFinancials" />
 </resources>
