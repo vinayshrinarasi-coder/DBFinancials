@@ -5,7 +5,7 @@
     tools:context="info.androidhive.recyclerviewsearch.MainActivity">
     <item
         android:id="@+id/action_search"
-        android:icon="@drawable/ic_search_black_24dp"
+        android:icon="@drawable/ic_search_white"
         android:orderInCategory="0"
         android:title="Search"
         app:showAsAction="always"

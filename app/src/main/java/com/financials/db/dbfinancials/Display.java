@@ -172,7 +172,7 @@ public class Display extends AppCompatActivity {
             filterList.add("Interest Rate");
             filterListMap.add("rateOfInterest");
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, filterList);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item, filterList);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             filter.setAdapter(adapter);
             filter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
