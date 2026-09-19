@@ -1,24 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:fitsSystemWindows="true"
     tools:context=".LogIn">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:scaleType="fitXY"
+                android:layout_centerHorizontal="true"
+                android:paddingBottom="20dp"
+                app:srcCompat="@drawable/nr" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/unameInputLayout"
                 android:layout_width="293dp"
-                android:layout_height="87dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/imageView6"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
                 app:errorEnabled="true"
-                app:hintTextAppearance="@style/HintText"
-                tools:layout_editor_absoluteX="75dp"
-                tools:layout_editor_absoluteY="408dp">
+                app:hintTextAppearance="@style/HintText">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/unameEditText"
@@ -32,13 +49,11 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passInputLayout"
                 android:layout_width="293dp"
-                android:layout_height="87dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/unameInputLayout"
                 android:layout_centerHorizontal="true"
                 app:errorEnabled="true"
-                app:hintTextAppearance="@style/HintText"
-                tools:layout_editor_absoluteX="75dp"
-                tools:layout_editor_absoluteY="408dp">
+                app:hintTextAppearance="@style/HintText">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/passEditText"
@@ -48,29 +63,15 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+        </RelativeLayout>
+    </ScrollView>
 
-            <ImageView
-                android:id="@+id/imageView6"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:scaleType="fitXY"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="54dp"
-                android:paddingBottom="20dp"
-                app:srcCompat="@drawable/nr" />
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:textColor="#FFF"
+        android:text="Log-In" />
 
-            <Button
-                android:id="@+id/btnLogin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"
-                android:background="@color/colorPrimary"
-                android:textColor="#FFF"
-                android:text="Log-In" />
-
-
-
-
-
-</RelativeLayout>
+</LinearLayout>
