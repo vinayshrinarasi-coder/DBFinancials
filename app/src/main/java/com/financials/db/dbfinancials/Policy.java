@@ -181,6 +181,15 @@ public class Policy {
         this.dateOfMaturity = dateOfMaturity;
     }
 
+    public static String convertToDbFormat(String date) {
+        try {
+            Date d = new SimpleDateFormat("dd-MM-yyyy").parse(date);
+            return new SimpleDateFormat("yyyy-MM-dd").format(d);
+        } catch (Exception e) {
+            return date;
+        }
+    }
+
     @Override
     public String toString() {
         return new Gson().toJson(this);

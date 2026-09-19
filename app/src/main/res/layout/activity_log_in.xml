@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".LogIn">
 
 
@@ -14,7 +15,6 @@
                 android:layout_height="87dp"
                 android:layout_below="@+id/imageView6"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="-54dp"
                 app:errorEnabled="true"
                 app:hintTextAppearance="@style/HintText"
                 tools:layout_editor_absoluteX="75dp"

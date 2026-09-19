@@ -34,6 +34,7 @@ public class Display extends AppCompatActivity {
     String asc_dsc = "asc";
     private PoliciesAdapter mAdapter;
     private final List<Policy> policiesList = new ArrayList<>();
+    android.widget.ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class Display extends AppCompatActivity {
 
     private void init() {
         policiesList.clear();
+        progressBar = findViewById(R.id.progressBar);
         mAdapter = new PoliciesAdapter(policiesList);
         runSQL();
         bondList = findViewById(R.id.bondList);
@@ -101,6 +103,7 @@ public class Display extends AppCompatActivity {
     }
 
     private void runSQL() {
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
         DatabaseHandler db = new DatabaseHandler(this);
         List<Policy> contacts = db.getPoliciesSQL("select * from " + DatabaseHandler.TABLE_CONTACTS + " order by " + orderBy + " " + asc_dsc);
         policiesList.clear();
@@ -109,6 +112,7 @@ public class Display extends AppCompatActivity {
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
+        if (progressBar != null) progressBar.setVisibility(View.GONE);
     }
 
     @Override

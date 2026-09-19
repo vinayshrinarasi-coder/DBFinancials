@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class ViewPolicy extends AppCompatActivity {
@@ -38,23 +39,31 @@ public class ViewPolicy extends AppCompatActivity {
 
     private void showViewDialog(Policy poly) {
         final Calendar myCalendar = Calendar.getInstance();
+        try {
+            Date d = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(poly.getDateOfDeposit());
+            if (d != null) myCalendar.setTime(d);
+        } catch (Exception ignored) {}
 
         final DatePickerDialog.OnDateSetListener date = (view, year, monthOfYear, dayOfMonth) -> {
             myCalendar.set(Calendar.YEAR, year);
             myCalendar.set(Calendar.MONTH, monthOfYear);
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            String myFormat = "yyyy-MM-dd";
+            String myFormat = "dd-MM-yyyy";
             SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
             dateOfDeposit.setText(sdf.format(myCalendar.getTime()));
         };
 
         final Calendar myCalendar2 = Calendar.getInstance();
+        try {
+            Date d = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(poly.getDateOfMaturity());
+            if (d != null) myCalendar2.setTime(d);
+        } catch (Exception ignored) {}
 
         final DatePickerDialog.OnDateSetListener date2 = (view, year, monthOfYear, dayOfMonth) -> {
             myCalendar2.set(Calendar.YEAR, year);
             myCalendar2.set(Calendar.MONTH, monthOfYear);
             myCalendar2.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            String myFormat = "yyyy-MM-dd";
+            String myFormat = "dd-MM-yyyy";
             SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
             dateOfMaturity.setText(sdf.format(myCalendar2.getTime()));
         };

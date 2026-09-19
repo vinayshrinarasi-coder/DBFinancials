@@ -47,6 +47,7 @@ public class DashBoard extends AppCompatActivity
     int cashAtBank, intrst;
     TextView cashAtBankView, intrstView, totalView;
     DrawerLayout drawer;
+    android.widget.ProgressBar progressBar;
 
     private final ActivityResultLauncher<Intent> importLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -108,6 +109,7 @@ public class DashBoard extends AppCompatActivity
         cashAtBankView = findViewById(R.id.cashAtBank);
         intrstView = findViewById(R.id.intrst);
         totalView = findViewById(R.id.total);
+        progressBar = findViewById(R.id.progressBar);
 
         display = findViewById(R.id.display);
         display.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), Display.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)));
@@ -115,6 +117,7 @@ public class DashBoard extends AppCompatActivity
     }
 
     private void runSQL() {
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
         Locale locale = new Locale("en", "IN");
         DecimalFormat decimalFormat = (DecimalFormat) DecimalFormat.getCurrencyInstance(locale);
         DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance(locale);
@@ -152,6 +155,7 @@ public class DashBoard extends AppCompatActivity
         intrstView.setText(" " + intrstStr.substring(0, intrstStr.length() - 3));
         String totalFinalStr = decimalFormat.format(cashAtBank + intrst);
         totalView.setText(" " + totalFinalStr.substring(0, totalFinalStr.length() - 3));
+        if (progressBar != null) progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -204,6 +208,7 @@ public class DashBoard extends AppCompatActivity
     }
 
     private void handleBackup(Uri uri) {
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
         try (OutputStream os = getContentResolver().openOutputStream(uri);
              BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8))) {
             DatabaseHandler db = new DatabaseHandler(this);
@@ -212,14 +217,17 @@ public class DashBoard extends AppCompatActivity
             String json = new Gson().toJson(policies, listType);
             writer.write(json);
             writer.flush();
+            if (progressBar != null) progressBar.setVisibility(View.GONE);
             Toast.makeText(this, "Backup saved successfully!", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
+            if (progressBar != null) progressBar.setVisibility(View.GONE);
             Log.e(TAG, "Backup failed", e);
             Toast.makeText(this, "Backup failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
     private void handleRestore(Uri uri) {
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
         try (InputStream is = getContentResolver().openInputStream(uri);
              BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             StringBuilder sb = new StringBuilder();
@@ -236,9 +244,11 @@ public class DashBoard extends AppCompatActivity
                     db.addPolicy(p);
                 }
                 runSQL();
+                if (progressBar != null) progressBar.setVisibility(View.GONE);
                 Toast.makeText(this, "Policies restored successfully!", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
+            if (progressBar != null) progressBar.setVisibility(View.GONE);
             Log.e(TAG, "Restore failed", e);
             Toast.makeText(this, "Restore failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }

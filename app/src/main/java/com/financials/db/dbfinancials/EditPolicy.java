@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ public class EditPolicy extends AppCompatActivity {
     public EditText holder, certificateNumber, dateOfDeposit, depositAmount, maturityAmount, dateOfMaturity, interest, nominee, rateOfInterest, bankName, durationInt, remarks;
     Policy p;
     Button save;
+    android.widget.ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,7 @@ public class EditPolicy extends AppCompatActivity {
             }
         }
         save = findViewById(R.id.save);
+        progressBar = findViewById(R.id.progressBar);
         if (p != null) {
             showViewDialog(p);
         } else {
@@ -46,19 +49,23 @@ public class EditPolicy extends AppCompatActivity {
 
     private void showViewDialog(Policy poly) {
         final Calendar myCalendar = Calendar.getInstance();
+        try {
+            Date d = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(poly.getDateOfDeposit());
+            if (d != null) myCalendar.setTime(d);
+        } catch (Exception ignored) {}
 
         final DatePickerDialog.OnDateSetListener date = (view, year, monthOfYear, dayOfMonth) -> {
             myCalendar.set(Calendar.YEAR, year);
             myCalendar.set(Calendar.MONTH, monthOfYear);
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            String myFormat = "yyyy-MM-dd";
+            String myFormat = "dd-MM-yyyy";
             SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
             dateOfDeposit.setText(sdf.format(myCalendar.getTime()));
 
             try {
                 String sDate1 = dateOfMaturity.getText().toString();
-                Date date1 = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(sDate1);
+                Date date1 = new SimpleDateFormat("dd-MM-yyyy", Locale.US).parse(sDate1);
                 if (date1 != null) {
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(date1);
@@ -71,18 +78,22 @@ public class EditPolicy extends AppCompatActivity {
         };
 
         final Calendar myCalendar2 = Calendar.getInstance();
+        try {
+            Date d = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(poly.getDateOfMaturity());
+            if (d != null) myCalendar2.setTime(d);
+        } catch (Exception ignored) {}
 
         final DatePickerDialog.OnDateSetListener date2 = (view, year, monthOfYear, dayOfMonth) -> {
             myCalendar2.set(Calendar.YEAR, year);
             myCalendar2.set(Calendar.MONTH, monthOfYear);
             myCalendar2.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            String myFormat = "yyyy-MM-dd";
+            String myFormat = "dd-MM-yyyy";
             SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
             dateOfMaturity.setText(sdf.format(myCalendar2.getTime()));
             try {
                 String sDate1 = dateOfDeposit.getText().toString();
-                Date date1 = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(sDate1);
+                Date date1 = new SimpleDateFormat("dd-MM-yyyy", Locale.US).parse(sDate1);
                 if (date1 != null) {
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(date1);
@@ -119,10 +130,10 @@ public class EditPolicy extends AppCompatActivity {
 
         holder.setText(poly.getHolder());
         certificateNumber.setText(poly.getCertificateNumber());
-        dateOfDeposit.setText(poly.getDateOfDeposit());
+        dateOfDeposit.setText(poly.getReadableDateOfDeposit());
         depositAmount.setText(String.valueOf(poly.getDepositAmount()));
         maturityAmount.setText(String.valueOf(poly.getMaturityAmount()));
-        dateOfMaturity.setText(poly.getDateOfMaturity());
+        dateOfMaturity.setText(poly.getReadableDateOfMaturity());
         interest.setText(String.valueOf(poly.getInterest()));
         nominee.setText(poly.getNominee());
         rateOfInterest.setText(String.valueOf(poly.getRateOfInterest()));
@@ -176,12 +187,14 @@ public class EditPolicy extends AppCompatActivity {
                         validateNumber(maturityAmountStr, "Please enter valid maturity amount..!!") &&
                         validateDouble(rateOfInterestStr, "Please enter valid rate of interest..!!")) {
                     save.setText("Please Wait..");
+                    if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
                     MediaPlayer playr = MediaPlayer.create(EditPolicy.this, R.raw.coin);
                     if (playr != null) {
                         playr.setOnCompletionListener(mp -> {
                             DatabaseHandler db = new DatabaseHandler(EditPolicy.this);
                             db.deletePolicy(p);
-                            db.addPolicy(new Policy(holderStr, certificateNumberStr, dateOfDepositStr, Integer.parseInt(depositAmountStr), Integer.parseInt(maturityAmountStr), dateOfMaturityStr, Integer.parseInt(interestStr), nomineeStr, Double.parseDouble(rateOfInterestStr), bankNameStr, Double.parseDouble(durationIntStr), remarksStr));
+                            db.addPolicy(new Policy(holderStr, certificateNumberStr, Policy.convertToDbFormat(dateOfDepositStr), Integer.parseInt(depositAmountStr), Integer.parseInt(maturityAmountStr), Policy.convertToDbFormat(dateOfMaturityStr), Integer.parseInt(interestStr), nomineeStr, Double.parseDouble(rateOfInterestStr), bankNameStr, Double.parseDouble(durationIntStr), remarksStr));
+                            if (progressBar != null) progressBar.setVisibility(View.GONE);
                             Toast.makeText(getApplicationContext(), "Success..!!", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(getApplicationContext(), Display.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             finish();
@@ -190,7 +203,8 @@ public class EditPolicy extends AppCompatActivity {
                     } else {
                         DatabaseHandler db = new DatabaseHandler(EditPolicy.this);
                         db.deletePolicy(p);
-                        db.addPolicy(new Policy(holderStr, certificateNumberStr, dateOfDepositStr, Integer.parseInt(depositAmountStr), Integer.parseInt(maturityAmountStr), dateOfMaturityStr, Integer.parseInt(interestStr), nomineeStr, Double.parseDouble(rateOfInterestStr), bankNameStr, Double.parseDouble(durationIntStr), remarksStr));
+                        db.addPolicy(new Policy(holderStr, certificateNumberStr, Policy.convertToDbFormat(dateOfDepositStr), Integer.parseInt(depositAmountStr), Integer.parseInt(maturityAmountStr), Policy.convertToDbFormat(dateOfMaturityStr), Integer.parseInt(interestStr), nomineeStr, Double.parseDouble(rateOfInterestStr), bankNameStr, Double.parseDouble(durationIntStr), remarksStr));
+                        if (progressBar != null) progressBar.setVisibility(View.GONE);
                         Toast.makeText(getApplicationContext(), "Success..!!", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(getApplicationContext(), Display.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         finish();
