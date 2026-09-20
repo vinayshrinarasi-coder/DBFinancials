@@ -7,9 +7,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.google.android.material.chip.Chip;
-
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DecimalFormat;
@@ -24,8 +23,7 @@ public class PoliciesAdapter extends RecyclerView.Adapter<PoliciesAdapter.MyView
     private List<Policy> poicyListFiltered;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView policyNumber, bank, name, amount, date, counter;
-        public Chip categoryChip;
+        public TextView policyNumber, bank, name, amount, date, counter, categoryChip;
 
         public MyViewHolder(View view) {
             super(view);
@@ -75,7 +73,19 @@ public class PoliciesAdapter extends RecyclerView.Adapter<PoliciesAdapter.MyView
         holder.amount.setText(amt);
         holder.date.setText(policy.getReadableDateOfMaturity());
         holder.counter.setText(String.valueOf(position + 1));
-        holder.categoryChip.setText(policy.getCategory() != null ? policy.getCategory() : "Bank");
+        
+        String category = policy.getCategory() != null ? policy.getCategory() : "Bank";
+        holder.categoryChip.setText(category.toUpperCase());
+        
+        if ("LIC".equalsIgnoreCase(category)) {
+            holder.categoryChip.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.lic_chip)));
+            holder.categoryChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.on_lic_chip));
+        } else {
+            holder.categoryChip.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.bank_chip)));
+            holder.categoryChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.on_bank_chip));
+        }
     }
 
     @Override

@@ -51,16 +51,18 @@
                     android:textColor="?attr/colorOnSurface"
                     android:textStyle="bold" />
 
-                <com.google.android.material.chip.Chip
+                <TextView
                     android:id="@+id/categoryChip"
-                    style="@style/Widget.Material3.Chip.Suggestion"
                     android:layout_width="wrap_content"
-                    android:layout_height="32dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Bank"
-                    android:textSize="11sp"
-                    android:visibility="visible"
-                    app:chipMinHeight="24dp" />
+                    android:background="@drawable/chip_background"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="1dp"
+                    android:text="BANK"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <TextView
