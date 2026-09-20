@@ -7,6 +7,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
+import com.google.android.material.chip.Chip;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +25,7 @@ public class PoliciesAdapter extends RecyclerView.Adapter<PoliciesAdapter.MyView
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView policyNumber, bank, name, amount, date, counter;
+        public Chip categoryChip;
 
         public MyViewHolder(View view) {
             super(view);
@@ -32,6 +35,7 @@ public class PoliciesAdapter extends RecyclerView.Adapter<PoliciesAdapter.MyView
             amount = view.findViewById(R.id.amount);
             date = view.findViewById(R.id.date);
             counter = view.findViewById(R.id.counter);
+            categoryChip = view.findViewById(R.id.categoryChip);
         }
     }
 
@@ -71,6 +75,7 @@ public class PoliciesAdapter extends RecyclerView.Adapter<PoliciesAdapter.MyView
         holder.amount.setText(amt);
         holder.date.setText(policy.getReadableDateOfMaturity());
         holder.counter.setText(String.valueOf(position + 1));
+        holder.categoryChip.setText(policy.getCategory() != null ? policy.getCategory() : "Bank");
     }
 
     @Override

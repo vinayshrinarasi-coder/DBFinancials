@@ -8,13 +8,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Policy {
-    String holder,certificateNumber,nominee,bankName,durationString,remarks,dateOfDeposit,dateOfMaturity;
+    String holder,certificateNumber,nominee,bankName,durationString,remarks,dateOfDeposit,dateOfMaturity,category;
     double rateOfInterest,durationInt,depositAmount,maturityAmount,interest;
     int id;
 
     public Policy() {}
 
-    public Policy(String holder,String certificateNumber,String dateOfDeposit,double depositAmount, double maturityAmount,String dateOfMaturity,double interest,String nominee,double rateOfInterest,String bankName,double durationInt,String remarks,int id) {
+    public Policy(String holder,String certificateNumber,String dateOfDeposit,double depositAmount, double maturityAmount,String dateOfMaturity,double interest,String nominee,double rateOfInterest,String bankName,double durationInt,String remarks,int id, String category) {
         this.holder = holder;
         this.certificateNumber = certificateNumber;
         this.nominee = nominee;
@@ -28,9 +28,10 @@ public class Policy {
         this.dateOfDeposit = dateOfDeposit;
         this.dateOfMaturity = dateOfMaturity;
         this.id = id;
+        this.category = category;
     }
 
-    public Policy(String holder,String certificateNumber,String dateOfDeposit,double depositAmount, double maturityAmount,String dateOfMaturity,double interest,String nominee,double rateOfInterest,String bankName,double durationInt,String remarks) {
+    public Policy(String holder,String certificateNumber,String dateOfDeposit,double depositAmount, double maturityAmount,String dateOfMaturity,double interest,String nominee,double rateOfInterest,String bankName,double durationInt,String remarks, String category) {
         this.holder = holder;
         this.certificateNumber = certificateNumber;
         this.nominee = nominee;
@@ -43,6 +44,7 @@ public class Policy {
         this.durationInt = durationInt;
         this.dateOfDeposit = dateOfDeposit;
         this.dateOfMaturity = dateOfMaturity;
+        this.category = category;
     }
 
 
@@ -93,6 +95,14 @@ public class Policy {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public int getId() {

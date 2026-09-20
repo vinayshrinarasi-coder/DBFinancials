@@ -48,8 +48,8 @@ public class DashBoard extends AppCompatActivity
 
     private static final String TAG = "DashBoard";
     Button display;
-    double cashAtBank, intrst;
-    TextView cashAtBankView, intrstView, totalView;
+    double cashAtBank, intrst, bankIntrst, licIntrst;
+    TextView cashAtBankView, intrstView, totalView, bankIntrstView, licIntrstView;
     DrawerLayout drawer;
     android.widget.ProgressBar progressBar;
 
@@ -126,6 +126,8 @@ public class DashBoard extends AppCompatActivity
     private void init() {
         cashAtBankView = findViewById(R.id.cashAtBank);
         intrstView = findViewById(R.id.intrst);
+        bankIntrstView = findViewById(R.id.bankInterest);
+        licIntrstView = findViewById(R.id.licInterest);
         totalView = findViewById(R.id.total);
         progressBar = findViewById(R.id.progressBar);
 
@@ -154,10 +156,17 @@ public class DashBoard extends AppCompatActivity
         
         cashAtBank = 0;
         intrst = 0;
+        bankIntrst = 0;
+        licIntrst = 0;
         for (int i = 0; i < contacts.size(); i++) {
             Policy p = contacts.get(i);
             cashAtBank += p.getDepositAmount();
             intrst += p.getInterest();
+            if ("LIC".equalsIgnoreCase(p.getCategory())) {
+                licIntrst += p.getInterest();
+            } else {
+                bankIntrst += p.getInterest();
+            }
             if (i < 4) {
                 int rowId = getResources().getIdentifier("row" + (i + 1), "id", getPackageName());
                 int dateId = getResources().getIdentifier("date" + (i + 1), "id", getPackageName());
@@ -181,6 +190,13 @@ public class DashBoard extends AppCompatActivity
         cashAtBankView.setText(" " + cashStr.substring(0, cashStr.length() - 3));
         String intrstStr = decimalFormat.format(intrst);
         intrstView.setText(" " + intrstStr.substring(0, intrstStr.length() - 3));
+        
+        String bankIntStr = decimalFormat.format(bankIntrst);
+        bankIntrstView.setText(" " + bankIntStr.substring(0, bankIntStr.length() - 3));
+        
+        String licIntStr = decimalFormat.format(licIntrst);
+        licIntrstView.setText(" " + licIntStr.substring(0, licIntStr.length() - 3));
+
         String totalFinalStr = decimalFormat.format(cashAtBank + intrst);
         totalView.setText(" " + totalFinalStr.substring(0, totalFinalStr.length() - 3));
         if (progressBar != null) progressBar.setVisibility(View.GONE);

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import java.util.Locale;
 
 public class EditPolicy extends AppCompatActivity {
     public EditText holder, certificateNumber, dateOfDeposit, depositAmount, maturityAmount, dateOfMaturity, interest, nominee, rateOfInterest, bankName, durationInt, remarks;
+    public AutoCompleteTextView categorySpinner;
     Policy p;
     Button save;
     android.widget.ProgressBar progressBar;
@@ -158,6 +160,7 @@ public class EditPolicy extends AppCompatActivity {
         durationInt = findViewById(R.id.durationInt);
         remarks = findViewById(R.id.remarks);
         nominee = findViewById(R.id.nominee);
+        categorySpinner = findViewById(R.id.categorySpinner);
 
         holder.setText(poly.getHolder());
         certificateNumber.setText(poly.getCertificateNumber());
@@ -171,6 +174,7 @@ public class EditPolicy extends AppCompatActivity {
         bankName.setText(poly.getBankName());
         durationInt.setText(String.valueOf(poly.getDurationInt()));
         remarks.setText(poly.getRemarks());
+        categorySpinner.setText(poly.getCategory() != null ? poly.getCategory() : "Bank", false);
 
         TextWatcher watcher = new TextWatcher() {
             @Override
@@ -202,6 +206,7 @@ public class EditPolicy extends AppCompatActivity {
                 final String bankNameStr = bankName.getText().toString().trim();
                 final String durationIntStr = durationInt.getText().toString().trim();
                 final String remarksStr = remarks.getText().toString().trim();
+                final String categoryStr = categorySpinner.getText().toString().trim();
 
                 if (holderStr.isEmpty()) msg("Please enter holder name..!!");
                 else if (certificateNumberStr.isEmpty()) msg("Please enter certificate number..!!");
@@ -225,7 +230,7 @@ public class EditPolicy extends AppCompatActivity {
                         playr.setOnCompletionListener(mp -> {
                             DatabaseHandler db = new DatabaseHandler(EditPolicy.this);
                             db.deletePolicy(p);
-                            db.addPolicy(new Policy(holderStr, certificateNumberStr, Policy.convertToDbFormat(dateOfDepositStr), Double.parseDouble(depositAmountStr), Double.parseDouble(maturityAmountStr), Policy.convertToDbFormat(dateOfMaturityStr), Double.parseDouble(interestStr), nomineeStr, Double.parseDouble(rateOfInterestStr), bankNameStr, Double.parseDouble(durationIntStr), remarksStr));
+                            db.addPolicy(new Policy(holderStr, certificateNumberStr, Policy.convertToDbFormat(dateOfDepositStr), Double.parseDouble(depositAmountStr), Double.parseDouble(maturityAmountStr), Policy.convertToDbFormat(dateOfMaturityStr), Double.parseDouble(interestStr), nomineeStr, Double.parseDouble(rateOfInterestStr), bankNameStr, Double.parseDouble(durationIntStr), remarksStr, categoryStr));
                             if (progressBar != null) progressBar.setVisibility(View.GONE);
                             Toast.makeText(getApplicationContext(), "Success..!!", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(getApplicationContext(), Display.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -235,7 +240,7 @@ public class EditPolicy extends AppCompatActivity {
                     } else {
                         DatabaseHandler db = new DatabaseHandler(EditPolicy.this);
                         db.deletePolicy(p);
-                        db.addPolicy(new Policy(holderStr, certificateNumberStr, Policy.convertToDbFormat(dateOfDepositStr), Double.parseDouble(depositAmountStr), Double.parseDouble(maturityAmountStr), Policy.convertToDbFormat(dateOfMaturityStr), Double.parseDouble(interestStr), nomineeStr, Double.parseDouble(rateOfInterestStr), bankNameStr, Double.parseDouble(durationIntStr), remarksStr));
+                        db.addPolicy(new Policy(holderStr, certificateNumberStr, Policy.convertToDbFormat(dateOfDepositStr), Double.parseDouble(depositAmountStr), Double.parseDouble(maturityAmountStr), Policy.convertToDbFormat(dateOfMaturityStr), Double.parseDouble(interestStr), nomineeStr, Double.parseDouble(rateOfInterestStr), bankNameStr, Double.parseDouble(durationIntStr), remarksStr, categoryStr));
                         if (progressBar != null) progressBar.setVisibility(View.GONE);
                         Toast.makeText(getApplicationContext(), "Success..!!", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(getApplicationContext(), Display.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));

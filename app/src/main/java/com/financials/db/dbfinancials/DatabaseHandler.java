@@ -10,7 +10,7 @@ import java.util.List;
 
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "DBFinancials";
     public static final String TABLE_CONTACTS = "Policy";
     private static final String id = "id";
@@ -26,6 +26,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String dateOfDeposit = "dateOfDeposit";
     private static final String dateOfMaturity = "dateOfMaturity";
     private static final String nominee = "nominee";
+    private static final String category = "category";
 
 
     public DatabaseHandler(Context context) {
@@ -49,15 +50,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "durationInt" + " DOUBLE,"
                 + "dateOfDeposit" + " DATE,"
                 + "dateOfMaturity" + " DATE,"
-                + "nominee" + " TEXT" + ")";
+                + "nominee" + " TEXT,"
+                + "category" + " TEXT" + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
 
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
-        onCreate(db);
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE " + TABLE_CONTACTS + " ADD COLUMN " + category + " TEXT DEFAULT 'Bank'");
+            // Logic to update existing rows based on content
+            db.execSQL("UPDATE " + TABLE_CONTACTS + " SET " + category + " = 'LIC' WHERE " +
+                    "bankName LIKE '%LIC%' OR remarks LIKE '%LIC%' OR holder LIKE '%LIC%' OR " +
+                    "nominee LIKE '%LIC%' OR certificateNumber LIKE '%LIC%' OR " +
+                    "bankName LIKE '%lic%' OR remarks LIKE '%lic%' OR holder LIKE '%lic%' OR " +
+                    "nominee LIKE '%lic%' OR certificateNumber LIKE '%lic%'");
+        }
     }
 
     public void deleteTable(){
@@ -82,6 +91,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(bankName, policy.getBankName());
         values.put(durationInt, policy.getDurationInt());
         values.put(remarks, policy.getRemarks());
+        values.put(category, policy.getCategory());
 
         db.insert(TABLE_CONTACTS, null, values);
         db.close();
@@ -91,7 +101,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     Policy getPolicyByID(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_CONTACTS, new String[] {holder, certificateNumber,dateOfDeposit,depositAmount,maturityAmount,dateOfMaturity,interest,nominee,rateOfInterest,bankName,durationInt,remarks,this.id},  "id =?",
+        Cursor cursor = db.query(TABLE_CONTACTS, new String[] {holder, certificateNumber,dateOfDeposit,depositAmount,maturityAmount,dateOfMaturity,interest,nominee,rateOfInterest,bankName,durationInt,remarks,category,this.id},  "id =?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
@@ -108,7 +118,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 cursor.getString(cursor.getColumnIndex("bankName")),
                 cursor.getDouble(cursor.getColumnIndex("durationInt")),
                 cursor.getString(cursor.getColumnIndex("remarks")),
-                cursor.getInt(cursor.getColumnIndex("id")));
+                cursor.getInt(cursor.getColumnIndex("id")),
+                cursor.getString(cursor.getColumnIndex("category")));
         // return policy
         return policy;
     }
@@ -137,7 +148,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndex("bankName")),
                         cursor.getDouble(cursor.getColumnIndex("durationInt")),
                         cursor.getString(cursor.getColumnIndex("remarks")),
-                        cursor.getInt(cursor.getColumnIndex("id")));
+                        cursor.getInt(cursor.getColumnIndex("id")),
+                        cursor.getString(cursor.getColumnIndex("category")));
                 policyList.add(policy);
             } while (cursor.moveToNext());
         }
@@ -170,7 +182,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndex("bankName")),
                         cursor.getDouble(cursor.getColumnIndex("durationInt")),
                         cursor.getString(cursor.getColumnIndex("remarks")),
-                        cursor.getInt(cursor.getColumnIndex("id")));
+                        cursor.getInt(cursor.getColumnIndex("id")),
+                        cursor.getString(cursor.getColumnIndex("category")));
                 policyList.add(policy);
             } while (cursor.moveToNext());
         }
@@ -196,6 +209,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(bankName, policy.getBankName());
         values.put(durationInt, policy.getDurationInt());
         values.put(remarks, policy.getRemarks());
+        values.put(category, policy.getCategory());
 
         // updating row
         return db.update(TABLE_CONTACTS, values, id + " = ?",
@@ -245,7 +259,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndex("bankName")),
                         cursor.getDouble(cursor.getColumnIndex("durationInt")),
                         cursor.getString(cursor.getColumnIndex("remarks")),
-                        cursor.getInt(cursor.getColumnIndex("id")));
+                        cursor.getInt(cursor.getColumnIndex("id")),
+                        cursor.getString(cursor.getColumnIndex("category")));
                 policyList.add(policy);
             } while (cursor.moveToNext());
         }

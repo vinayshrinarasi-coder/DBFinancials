@@ -30,6 +30,7 @@ import java.util.Map;
 public class AnalysisActivity extends AppCompatActivity {
 
     private PieChart bankPieChart;
+    private PieChart categoryPieChart;
     private BarChart amountBarChart;
     private BarChart interestBarChart;
     private DatabaseHandler db;
@@ -91,12 +92,14 @@ public class AnalysisActivity extends AppCompatActivity {
         }
 
         bankPieChart = findViewById(R.id.bankPieChart);
+        categoryPieChart = findViewById(R.id.categoryPieChart);
         amountBarChart = findViewById(R.id.amountBarChart);
         interestBarChart = findViewById(R.id.interestBarChart);
 
         db = new DatabaseHandler(this);
         List<Policy> policies = db.getAllPolicies();
 
+        setupCategoryPieChart(policies);
         setupBankPieChart(policies);
         setupAmountBarChart(policies);
         setupInterestBarChart(policies);
@@ -157,6 +160,39 @@ public class AnalysisActivity extends AppCompatActivity {
 
         bankPieChart.animateY(1000);
         bankPieChart.invalidate();
+    }
+
+    private void setupCategoryPieChart(List<Policy> policies) {
+        Map<String, Double> categoryDeposits = new HashMap<>();
+        float totalAmount = 0f;
+        for (Policy p : policies) {
+            String category = p.getCategory();
+            if (category == null || category.isEmpty()) category = "Bank";
+            double amount = p.getDepositAmount();
+            categoryDeposits.put(category, categoryDeposits.getOrDefault(category, 0.0) + amount);
+            totalAmount += (float) amount;
+        }
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : categoryDeposits.entrySet()) {
+            entries.add(new PieEntry(entry.getValue().floatValue(), entry.getKey()));
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        dataSet.setValueTextColor(Color.BLACK);
+        dataSet.setValueTextSize(10f);
+        dataSet.setValueFormatter(new IndianCurrencyFormatter(totalAmount));
+
+        PieData data = new PieData(dataSet);
+        categoryPieChart.setData(data);
+        categoryPieChart.getDescription().setEnabled(false);
+        categoryPieChart.setCenterText("By Category");
+        categoryPieChart.setDrawEntryLabels(true);
+        categoryPieChart.setEntryLabelColor(Color.BLACK);
+
+        categoryPieChart.animateY(1000);
+        categoryPieChart.invalidate();
     }
 
     private void setupAmountBarChart(List<Policy> policies) {

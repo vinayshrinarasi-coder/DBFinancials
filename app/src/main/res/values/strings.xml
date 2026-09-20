@@ -8,4 +8,9 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="menu_analysis">Analysis</string>
+
+    <string-array name="categories">
+        <item>Bank</item>
+        <item>LIC</item>
+    </string-array>
 </resources>
