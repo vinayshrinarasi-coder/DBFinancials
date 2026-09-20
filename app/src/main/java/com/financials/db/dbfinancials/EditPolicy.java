@@ -162,10 +162,10 @@ public class EditPolicy extends AppCompatActivity {
         holder.setText(poly.getHolder());
         certificateNumber.setText(poly.getCertificateNumber());
         dateOfDeposit.setText(poly.getReadableDateOfDeposit());
-        depositAmount.setText(String.valueOf(poly.getDepositAmount()));
-        maturityAmount.setText(String.valueOf(poly.getMaturityAmount()));
+        depositAmount.setText(formatAmount(poly.getDepositAmount()));
+        maturityAmount.setText(formatAmount(poly.getMaturityAmount()));
         dateOfMaturity.setText(poly.getReadableDateOfMaturity());
-        interest.setText(String.valueOf(poly.getInterest()));
+        interest.setText(formatAmount(poly.getInterest()));
         nominee.setText(poly.getNominee());
         rateOfInterest.setText(String.valueOf(poly.getRateOfInterest()));
         bankName.setText(poly.getBankName());
@@ -225,7 +225,7 @@ public class EditPolicy extends AppCompatActivity {
                         playr.setOnCompletionListener(mp -> {
                             DatabaseHandler db = new DatabaseHandler(EditPolicy.this);
                             db.deletePolicy(p);
-                            db.addPolicy(new Policy(holderStr, certificateNumberStr, Policy.convertToDbFormat(dateOfDepositStr), Integer.parseInt(depositAmountStr), Integer.parseInt(maturityAmountStr), Policy.convertToDbFormat(dateOfMaturityStr), Integer.parseInt(interestStr), nomineeStr, Double.parseDouble(rateOfInterestStr), bankNameStr, Double.parseDouble(durationIntStr), remarksStr));
+                            db.addPolicy(new Policy(holderStr, certificateNumberStr, Policy.convertToDbFormat(dateOfDepositStr), Double.parseDouble(depositAmountStr), Double.parseDouble(maturityAmountStr), Policy.convertToDbFormat(dateOfMaturityStr), Double.parseDouble(interestStr), nomineeStr, Double.parseDouble(rateOfInterestStr), bankNameStr, Double.parseDouble(durationIntStr), remarksStr));
                             if (progressBar != null) progressBar.setVisibility(View.GONE);
                             Toast.makeText(getApplicationContext(), "Success..!!", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(getApplicationContext(), Display.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -235,7 +235,7 @@ public class EditPolicy extends AppCompatActivity {
                     } else {
                         DatabaseHandler db = new DatabaseHandler(EditPolicy.this);
                         db.deletePolicy(p);
-                        db.addPolicy(new Policy(holderStr, certificateNumberStr, Policy.convertToDbFormat(dateOfDepositStr), Integer.parseInt(depositAmountStr), Integer.parseInt(maturityAmountStr), Policy.convertToDbFormat(dateOfMaturityStr), Integer.parseInt(interestStr), nomineeStr, Double.parseDouble(rateOfInterestStr), bankNameStr, Double.parseDouble(durationIntStr), remarksStr));
+                        db.addPolicy(new Policy(holderStr, certificateNumberStr, Policy.convertToDbFormat(dateOfDepositStr), Double.parseDouble(depositAmountStr), Double.parseDouble(maturityAmountStr), Policy.convertToDbFormat(dateOfMaturityStr), Double.parseDouble(interestStr), nomineeStr, Double.parseDouble(rateOfInterestStr), bankNameStr, Double.parseDouble(durationIntStr), remarksStr));
                         if (progressBar != null) progressBar.setVisibility(View.GONE);
                         Toast.makeText(getApplicationContext(), "Success..!!", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(getApplicationContext(), Display.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -246,14 +246,22 @@ public class EditPolicy extends AppCompatActivity {
         }));
     }
 
+    private String formatAmount(double amount) {
+        if (amount == (long) amount) {
+            return String.format(Locale.US, "%d", (long) amount);
+        } else {
+            return String.format(Locale.US, "%.2f", amount);
+        }
+    }
+
     private void updateInterest() {
         String daStr = depositAmount.getText().toString().trim();
         String maStr = maturityAmount.getText().toString().trim();
         if (!daStr.isEmpty() && !maStr.isEmpty()) {
             try {
-                int da = Integer.parseInt(daStr);
-                int ma = Integer.parseInt(maStr);
-                interest.setText(String.valueOf(ma - da));
+                double da = Double.parseDouble(daStr);
+                double ma = Double.parseDouble(maStr);
+                interest.setText(String.format(Locale.US, "%.2f", ma - da));
             } catch (NumberFormatException e) {
                 interest.setText("0");
             }
@@ -264,7 +272,7 @@ public class EditPolicy extends AppCompatActivity {
 
     private boolean validateNumber(String num, String msg) {
         try {
-            Integer.parseInt(num);
+            Double.parseDouble(num);
             return true;
         } catch (Exception e) {
             msg(msg);

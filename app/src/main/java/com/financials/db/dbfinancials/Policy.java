@@ -9,12 +9,12 @@ import java.util.Date;
 
 public class Policy {
     String holder,certificateNumber,nominee,bankName,durationString,remarks,dateOfDeposit,dateOfMaturity;
-    double rateOfInterest,durationInt;
-    int depositAmount,maturityAmount,interest,id;
+    double rateOfInterest,durationInt,depositAmount,maturityAmount,interest;
+    int id;
 
     public Policy() {}
 
-    public Policy(String holder,String certificateNumber,String dateOfDeposit,int depositAmount, int maturityAmount,String dateOfMaturity,int interest,String nominee,double rateOfInterest,String bankName,double durationInt,String remarks,int id) {
+    public Policy(String holder,String certificateNumber,String dateOfDeposit,double depositAmount, double maturityAmount,String dateOfMaturity,double interest,String nominee,double rateOfInterest,String bankName,double durationInt,String remarks,int id) {
         this.holder = holder;
         this.certificateNumber = certificateNumber;
         this.nominee = nominee;
@@ -30,7 +30,7 @@ public class Policy {
         this.id = id;
     }
 
-    public Policy(String holder,String certificateNumber,String dateOfDeposit,int depositAmount, int maturityAmount,String dateOfMaturity,int interest,String nominee,double rateOfInterest,String bankName,double durationInt,String remarks) {
+    public Policy(String holder,String certificateNumber,String dateOfDeposit,double depositAmount, double maturityAmount,String dateOfMaturity,double interest,String nominee,double rateOfInterest,String bankName,double durationInt,String remarks) {
         this.holder = holder;
         this.certificateNumber = certificateNumber;
         this.nominee = nominee;
@@ -103,27 +103,27 @@ public class Policy {
         this.id = id;
     }
 
-    public int getDepositAmount() {
+    public double getDepositAmount() {
         return depositAmount;
     }
 
-    public void setDepositAmount(int depositAmount) {
+    public void setDepositAmount(double depositAmount) {
         this.depositAmount = depositAmount;
     }
 
-    public int getMaturityAmount() {
+    public double getMaturityAmount() {
         return maturityAmount;
     }
 
-    public void setMaturityAmount(int maturityAmount) {
+    public void setMaturityAmount(double maturityAmount) {
         this.maturityAmount = maturityAmount;
     }
 
-    public int getInterest() {
+    public double getInterest() {
         return interest;
     }
 
-    public void setInterest(int interest) {
+    public void setInterest(double interest) {
         this.interest = interest;
     }
 

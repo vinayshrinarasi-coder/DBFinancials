@@ -189,7 +189,7 @@ public class AddNewPolicy extends AppCompatActivity {
                     if (playr != null) {
                         playr.setOnCompletionListener(mp -> {
                             DatabaseHandler db = new DatabaseHandler(AddNewPolicy.this);
-                            db.addPolicy(new Policy(holderStr, certificateNumberStr, Policy.convertToDbFormat(dateOfDepositStr), Integer.parseInt(depositAmountStr), Integer.parseInt(maturityAmountStr), Policy.convertToDbFormat(dateOfMaturityStr), Integer.parseInt(interestStr), nomineeStr, Double.parseDouble(rateOfInterestStr), bankNameStr, Double.parseDouble(durationIntStr), remarksStr));
+                            db.addPolicy(new Policy(holderStr, certificateNumberStr, Policy.convertToDbFormat(dateOfDepositStr), Double.parseDouble(depositAmountStr), Double.parseDouble(maturityAmountStr), Policy.convertToDbFormat(dateOfMaturityStr), Double.parseDouble(interestStr), nomineeStr, Double.parseDouble(rateOfInterestStr), bankNameStr, Double.parseDouble(durationIntStr), remarksStr));
                             if (progressBar != null) progressBar.setVisibility(View.GONE);
                             Toast.makeText(getApplicationContext(), "Success..!!", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(getApplicationContext(), Display.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -199,7 +199,7 @@ public class AddNewPolicy extends AppCompatActivity {
                     } else {
                         // Fallback if media player fails
                         DatabaseHandler db = new DatabaseHandler(AddNewPolicy.this);
-                        db.addPolicy(new Policy(holderStr, certificateNumberStr, Policy.convertToDbFormat(dateOfDepositStr), Integer.parseInt(depositAmountStr), Integer.parseInt(maturityAmountStr), Policy.convertToDbFormat(dateOfMaturityStr), Integer.parseInt(interestStr), nomineeStr, Double.parseDouble(rateOfInterestStr), bankNameStr, Double.parseDouble(durationIntStr), remarksStr));
+                        db.addPolicy(new Policy(holderStr, certificateNumberStr, Policy.convertToDbFormat(dateOfDepositStr), Double.parseDouble(depositAmountStr), Double.parseDouble(maturityAmountStr), Policy.convertToDbFormat(dateOfMaturityStr), Double.parseDouble(interestStr), nomineeStr, Double.parseDouble(rateOfInterestStr), bankNameStr, Double.parseDouble(durationIntStr), remarksStr));
                         if (progressBar != null) progressBar.setVisibility(View.GONE);
                         Toast.makeText(getApplicationContext(), "Success..!!", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(getApplicationContext(), Display.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -215,9 +215,9 @@ public class AddNewPolicy extends AppCompatActivity {
         String maStr = maturityAmount.getText().toString().trim();
         if (!daStr.isEmpty() && !maStr.isEmpty()) {
             try {
-                int da = Integer.parseInt(daStr);
-                int ma = Integer.parseInt(maStr);
-                interest.setText(String.valueOf(ma - da));
+                double da = Double.parseDouble(daStr);
+                double ma = Double.parseDouble(maStr);
+                interest.setText(String.format(Locale.US, "%.2f", ma - da));
             } catch (NumberFormatException e) {
                 interest.setText("0");
             }
@@ -228,7 +228,7 @@ public class AddNewPolicy extends AppCompatActivity {
 
     private boolean validateNumber(String num, String msg) {
         try {
-            Integer.parseInt(num);
+            Double.parseDouble(num);
             return true;
         } catch (Exception e) {
             msg(msg);

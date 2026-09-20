@@ -5,6 +5,10 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_analysis"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/menu_analysis" />
+        <item
             android:id="@+id/nav_backup"
             android:icon="@drawable/ic_backup_black_24dp"
             android:title="Backup Policies" />

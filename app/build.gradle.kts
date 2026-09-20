@@ -37,6 +37,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.picasso)
     implementation(libs.gson)
+    implementation(libs.mpandroidchart)
     
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

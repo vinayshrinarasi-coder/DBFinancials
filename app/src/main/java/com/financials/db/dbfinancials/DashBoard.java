@@ -48,7 +48,7 @@ public class DashBoard extends AppCompatActivity
 
     private static final String TAG = "DashBoard";
     Button display;
-    int cashAtBank, intrst;
+    double cashAtBank, intrst;
     TextView cashAtBankView, intrstView, totalView;
     DrawerLayout drawer;
     android.widget.ProgressBar progressBar;
@@ -211,7 +211,9 @@ public class DashBoard extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.nav_backup) {
+        if (id == R.id.nav_analysis) {
+            startActivity(new Intent(this, AnalysisActivity.class));
+        } else if (id == R.id.nav_backup) {
             exportBackup();
         } else if (id == R.id.nav_restore) {
             importRestore();
