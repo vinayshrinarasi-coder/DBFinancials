@@ -40,6 +40,8 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -242,7 +244,11 @@ public class DashBoard extends AppCompatActivity
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TITLE, "PoliciesBackup.txt");
+        
+        String timeStamp = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+        String fileName = "PoliciesBackup_" + timeStamp + ".txt";
+        
+        intent.putExtra(Intent.EXTRA_TITLE, fileName);
         exportLauncher.launch(intent);
     }
 
